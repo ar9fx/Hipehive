@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HypeHive | Premium Digital Hub</title>
+    <style>
+        :root {
+            --accent: #00f2ff;
+            --purple: #bc13fe;
+            --bg: #080808;
+            --card: rgba(255, 255, 255, 0.05);
+        }
+        body {
+            background: var(--bg);
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, var(--accent), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        header { padding: 40px 0; border-bottom: 1px solid #222; }
+        .wallet-card {
+            background: linear-gradient(135deg, #1a1a1a, #000);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px solid var(--accent);
+            max-width: 350px;
+            margin: 20px auto;
+        }
+        .section-title { margin: 40px 0 20px; font-size: 1.5em; text-transform: uppercase; letter-spacing: 2px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; max-width: 1000px; margin: 0 auto; }
+        .card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid #333; transition: 0.3s; }
+        .card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .price { color: var(--accent); font-weight: bold; display: block; margin-top: 10px; }
+        
+        .admin-btn { position: fixed; bottom: 20px; right: 20px; background: none; border: none; color: #333; cursor: pointer; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111; padding: 30px; border-radius: 20px; border: 2px solid var(--purple); z-index: 100; width: 80%; max-width: 400px; }
+        
+        input { background: #222; border: 1px solid #444; color: white; padding: 10px; border-radius: 5px; width: 90%; margin: 10px 0; }
+        .btn { background: var(--accent); color: black; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: bold; border: none; cursor: pointer; display: inline-block; margin-top: 10px; }
+        .qr-img { width: 220px; border-radius: 15px; margin: 15px 0; border: 3px solid #fff; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1 class="gradient-text">HYPEHIVE 👑</h1>
+        <p style="color: #888;">Powered by (𝐏‿7) KEROK SERVICES</p>
+    </header>
+
+    <div class="wallet-card">
+        <p style="margin:0; color: #888;">Your Wallet Balance</p>
+        <h2 id="userBalance">₹ 0.00</h2>
+        <button class="btn" onclick="openPayment()">Add Funds</button>
+    </div>
+
+    <div class="section-title">🛡️ Old Accounts</div>
+    <div class="grid" id="accountsGrid">
+        </div>
+
+    <div class="section-title">📊 Social Media Boost</div>
+    <div class="card" style="max-width: 800px; margin: 0 auto;">
+        <p>Instagram Followers/Likes • YouTube Subs • Telegram Members • WhatsApp Numbers</p>
+        <a href="https://t.me/ar9fx" class="btn">Order via Telegram</a>
+    </div>
+
+    <div class="section-title">🎓 Premium Courses</div>
+    <div class="grid">
+        <div class="card">Banning/Unbanning <span class="price">₹300</span></div>
+        <div class="card">Jacking Course <span class="price">₹200</span></div>
+        <div class="card">Python Course <span class="price">₹100</span></div>
+    </div>
+
+    <button class="admin-btn" onclick="checkAdmin()">.</button>
+
+    <div id="adminModal" class="modal">
+        <h3>HypeHive Admin</h3>
+        <input type="number" id="newBalance" placeholder="Enter Amount to Add">
+        <button class="btn" onclick="updateBalance()">Update User Balance</button>
+        <button class="btn" style="background: #ff4444;" onclick="closeModal()">Close</button>
+    </div>
+
+    <div id="paymentModal" class="modal">
+        <h3>Scan to Pay</h3>
+        <p>Send Screenshot to @ar9fx with your ID</p>
+        <img src="https://i.ibb.co/C3X9p8K/qr-code.jpg" class="qr-img" alt="Payment QR">
+        <p><b>arnaviscool7@fam</b></p>
+        <button class="btn" onclick="closePayment()">Done</button>
+    </div>
+
+    <div style="margin-top: 50px; color: #444;">
+        <p>Credits: <b>Arnav & Aarav</b></p>
+    </div>
+
+    <script>
+        // Data Configuration
+        const prices = { "2k12": 300, "2k13": 250, "2k14": 300, "2k15": 250, "2k16": 200, "2k17": 150, "2k18": 100, "2k19": 70 };
+        const grid = document.getElementById('accountsGrid');
+        
+        // Generate Account Cards
+        for (let year in prices) {
+            grid.innerHTML += `<div class="card">${year} <span class="price">₹${prices[year]}</span></div>`;
+        }
+
+        // Wallet Logic
+        let balance = localStorage.getItem('hypeBalance') || 0;
+        document.getElementById('userBalance').innerText = "₹ " + balance;
+
+        function checkAdmin() {
+            let pass = prompt("Enter Admin Password:");
+            if(pass === "Teampower7hipehive") {
+                document.getElementById('adminModal').style.display = 'block';
+            } else { alert("Access Denied!"); }
+        }
+
+        function updateBalance() {
+            let amt = document.getElementById('newBalance').value;
+            balance = parseFloat(balance) + parseFloat(amt);
+            localStorage.setItem('hypeBalance', balance);
+            document.getElementById('userBalance').innerText = "₹ " + balance;
+            alert("Funds Added Successfully!");
+            closeModal();
+        }
+
+        function openPayment() { document.getElementById('paymentModal').style.display = 'block'; }
+        function closePayment() { document.getElementById('paymentModal').style.display = 'none'; }
+        function closeModal() { document.getElementById('adminModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
